@@ -1,0 +1,59 @@
+name: Release & Packaging Pipeline
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  build-and-release:
+    name: Build Artifacts and Create GitHub Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Build Java JARs
+        run: mvn clean package -DskipTests --batch-mode
+
+      - name: Set up Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Build Node Packages
+        working-directory: ./node
+        run: npm run build --if-present
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Build Python Wheel & Tarball
+        working-directory: ./python
+        run: |
+          python -m pip install --upgrade pip build
+          python -m build
+
+      - name: Generate Release Notes & Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          files: |
+            java/*/target/*.jar
+            python/dist/*

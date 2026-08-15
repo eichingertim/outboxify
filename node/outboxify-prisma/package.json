@@ -1,0 +1,30 @@
+{
+  "name": "@outboxify/prisma",
+  "version": "2.0.0",
+  "description": "Prisma client extension and transactional outbox middleware for Outboxify",
+  "main": "src/index.js",
+  "types": "src/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "require": "./src/index.js",
+      "default": "./src/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "engines": {
+    "node": ">=20.0.0 || >=22.0.0 || >=24.0.0"
+  },
+  "scripts": {
+    "test": "node --test test/"
+  },
+  "dependencies": {
+    "@outboxify/core": "^2.0.0"
+  },
+  "peerDependencies": {
+    "@prisma/client": ">=5.0.0 || >=6.0.0 || >=7.0.0"
+  },
+  "keywords": ["outboxify", "prisma", "outbox", "kafka"],
+  "author": "Outboxify Authors",
+  "license": "Apache-2.0"
+}

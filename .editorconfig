@@ -1,0 +1,31 @@
+# EditorConfig is awesome: https://EditorConfig.org
+
+root = true
+
+[*]
+indent_style = space
+indent_size = 2
+end_of_line = lf
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+# Java
+[*.java]
+indent_size = 4
+
+# Python
+[*.py]
+indent_size = 4
+
+# XML, POM, HTML
+[*.{xml,pom,html}]
+indent_size = 4
+
+# Markdown
+[*.md]
+trim_trailing_whitespace = false
+
+# JSON, YAML
+[*.{json,yml,yaml}]
+indent_size = 2

@@ -1,0 +1,177 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://outboxify.io/schemas/configuration-schema.json",
+  "title": "OutboxifyConfiguration",
+  "description": "Configuration schema for Outboxify polyglot transactional outbox library",
+  "type": "object",
+  "properties": {
+    "outboxify": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Global enable/disable switch for Outboxify engine"
+        },
+        "defaults": {
+          "$ref": "#/$defs/PipelineDefaults"
+        },
+        "pipelines": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/PipelineConfig"
+          },
+          "description": "Dictionary of pipeline configurations keyed by pipeline name"
+        }
+      },
+      "required": ["pipelines"]
+    }
+  },
+  "required": ["outboxify"],
+  "$defs": {
+    "PipelineDefaults": {
+      "type": "object",
+      "properties": {
+        "batchSize": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10000,
+          "default": 100,
+          "description": "Number of records to fetch and process in a single poll cycle"
+        },
+        "pollIntervalMs": {
+          "type": "integer",
+          "minimum": 10,
+          "default": 1000,
+          "description": "Interval in milliseconds between slow-path poller executions"
+        },
+        "processingTimeoutSeconds": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 300,
+          "description": "Threshold in seconds before a PROCESSING row is deemed stale and reaped"
+        },
+        "reaperIntervalMs": {
+          "type": "integer",
+          "minimum": 100,
+          "default": 10000,
+          "description": "Interval in milliseconds between watchdog reaper executions"
+        },
+        "maxRetries": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 5,
+          "description": "Maximum retry attempts before permanently leaving record in FAILED status"
+        },
+        "pollerThreads": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1,
+          "description": "Worker threads dedicated to executing polling cycles"
+        }
+      }
+    },
+    "PipelineConfig": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": true
+        },
+        "tableName": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Target database table name (dedicated outbox or domain table)"
+        },
+        "dialect": {
+          "type": "string",
+          "enum": ["AUTO_DETECT", "ORACLE", "POSTGRESQL", "MYSQL", "MSSQL"],
+          "default": "AUTO_DETECT",
+          "description": "SQL dialect used for concurrency control and timestamp arithmetic"
+        },
+        "batchSize": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "pollIntervalMs": {
+          "type": "integer",
+          "minimum": 10
+        },
+        "processingTimeoutSeconds": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "reaperIntervalMs": {
+          "type": "integer",
+          "minimum": 100
+        },
+        "maxRetries": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "immediateSend": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": true,
+              "description": "Enable sub-millisecond fast-path dispatch upon transaction commit"
+            },
+            "mode": {
+              "type": "string",
+              "enum": ["TRANSACTION_HOOK", "DISABLED"],
+              "default": "TRANSACTION_HOOK"
+            }
+          }
+        },
+        "columns": {
+          "$ref": "#/$defs/ColumnMapping"
+        },
+        "broker": {
+          "$ref": "#/$defs/BrokerConfig"
+        }
+      },
+      "required": ["tableName"]
+    },
+    "ColumnMapping": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "default": "id" },
+        "topic": { "type": "string", "default": "topic" },
+        "partitionKey": { "type": "string", "default": "partition_key" },
+        "payload": { "type": "string", "default": "payload" },
+        "headers": { "type": "string", "default": "headers" },
+        "status": { "type": "string", "default": "status" },
+        "retryCount": { "type": "string", "default": "retry_count" },
+        "lastError": { "type": "string", "default": "last_error" },
+        "createdAt": { "type": "string", "default": "created_at" },
+        "updatedAt": { "type": "string", "default": "updated_at" },
+        "processedAt": { "type": "string", "default": "processed_at" }
+      }
+    },
+    "BrokerConfig": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["KAFKA", "CUSTOM"],
+          "default": "KAFKA"
+        },
+        "producer": {
+          "type": "object",
+          "properties": {
+            "bootstrapServers": { "type": "string" },
+            "acks": { "type": "string", "default": "all" },
+            "enableIdempotence": { "type": "boolean", "default": true },
+            "lingerMs": { "type": "integer", "default": 5 },
+            "retries": { "type": "integer", "default": 3 },
+            "additionalProperties": {
+              "type": "object",
+              "additionalProperties": { "type": "string" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

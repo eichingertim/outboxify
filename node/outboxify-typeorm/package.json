@@ -1,0 +1,30 @@
+{
+  "name": "@outboxify/typeorm",
+  "version": "2.0.0",
+  "description": "TypeORM entity subscriber and transactional outbox integration for Outboxify",
+  "main": "src/index.js",
+  "types": "src/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "require": "./src/index.js",
+      "default": "./src/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "engines": {
+    "node": ">=20.0.0 || >=22.0.0 || >=24.0.0"
+  },
+  "scripts": {
+    "test": "node --test test/"
+  },
+  "dependencies": {
+    "@outboxify/core": "^2.0.0"
+  },
+  "peerDependencies": {
+    "typeorm": ">=0.3.20 || ^1.0.0"
+  },
+  "keywords": ["outboxify", "typeorm", "outbox", "kafka"],
+  "author": "Outboxify Authors",
+  "license": "Apache-2.0"
+}

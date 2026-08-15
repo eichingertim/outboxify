@@ -1,0 +1,45 @@
+[build-system]
+requires = ["setuptools>=75.8.0", "wheel>=0.45.1"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "outboxify"
+version = "2.0.0"
+description = "Polyglot High-Throughput Transactional Outbox Starter for Python"
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [{ name = "Outboxify Authors" }]
+license = { text = "Apache-2.0" }
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Framework :: AsyncIO",
+    "Framework :: FastAPI",
+    "Topic :: Database",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Typing :: Typed",
+]
+dependencies = []
+
+[project.optional-dependencies]
+sqlalchemy = ["sqlalchemy>=2.0.52"]
+fastapi = ["fastapi>=0.141.1", "pydantic>=2.14.0"]
+kafka = ["aiokafka>=0.12.0"]
+test = ["pytest>=9.1.1", "pytest-asyncio>=1.4.0"]
+
+[project.urls]
+Homepage = "https://outboxify.io"
+Documentation = "https://docs.outboxify.io"
+Repository = "https://github.com/outboxify/outboxify"
+Issues = "https://github.com/outboxify/outboxify/issues"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+

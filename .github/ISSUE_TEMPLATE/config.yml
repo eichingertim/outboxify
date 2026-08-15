@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security Vulnerabilities
+    url: https://github.com/outboxify/outboxify/security/policy
+    about: Please report security vulnerabilities confidentially according to our security policy.
+  - name: Community Q&A and Discussions
+    url: https://github.com/outboxify/outboxify/discussions
+    about: Ask questions, share ideas, and discuss architectural patterns with the community.

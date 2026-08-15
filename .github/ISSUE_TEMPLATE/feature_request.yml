@@ -1,0 +1,45 @@
+name: 💡 Feature Request
+description: Suggest a new feature, database dialect, or framework integration
+title: "[FEAT]: <short description>"
+labels: ["enhancement", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for suggesting a feature for Outboxify!
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Feature Category
+      options:
+        - "New Database Dialect (e.g. CockroachDB, Spanner, DB2, DynamoDB)"
+        - "New Broker Adapter (e.g. RabbitMQ, NATS, AWS SQS/SNS, Pulsar)"
+        - "Framework Integration (e.g. Quarkus, Micronaut, Express, Fastify, Django)"
+        - "Core Engine / State Machine Optimization"
+        - "Monitoring / Observability (OpenTelemetry, Prometheus, Micrometer)"
+        - "Other"
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem / Motivation
+      description: Is your feature request related to a problem or limitation? Please describe.
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution / Architecture
+      description: Describe how the feature should work across Java, Node.js, and/or Python.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Any alternative solutions or features you've considered.
