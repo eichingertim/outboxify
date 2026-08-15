@@ -16,7 +16,7 @@
     "node": ">=20.0.0 || >=22.0.0 || >=24.0.0"
   },
   "scripts": {
-    "test": "node --test test/"
+    "test": "node --test test/core.test.js"
   },
   "keywords": ["outbox", "kafka", "oracle", "postgresql", "mysql", "sqlserver", "transactional-outbox"],
   "author": "Outboxify Authors",

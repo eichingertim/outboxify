@@ -16,7 +16,7 @@
     "node": ">=20.0.0 || >=22.0.0 || >=24.0.0"
   },
   "scripts": {
-    "test": "node --test test/"
+    "test": "node --test test/typeorm.test.js"
   },
   "dependencies": {
     "@outboxify/core": "^2.0.0"
