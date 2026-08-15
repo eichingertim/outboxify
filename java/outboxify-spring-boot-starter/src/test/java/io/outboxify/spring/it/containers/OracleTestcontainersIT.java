@@ -41,8 +41,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Testcontainers(disabledWithoutDocker = true)
 class OracleTestcontainersIT {
 
-    @Container
     static OracleContainer oracle = new OracleContainer("gvenzl/oracle-free:23-slim-faststart");
+
+    static {
+        oracle.start();
+    }
 
     private static DynamicSqlRepository repository;
     private static PipelineConfig config;

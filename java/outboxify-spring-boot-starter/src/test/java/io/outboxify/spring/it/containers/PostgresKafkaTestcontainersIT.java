@@ -64,14 +64,17 @@ import static org.awaitility.Awaitility.await;
 @SpringBootTest(classes = PostgresKafkaTestcontainersIT.TestApp.class)
 class PostgresKafkaTestcontainersIT {
 
-    @Container
     static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16-alpine")
             .withDatabaseName("outbox_db")
             .withUsername("outbox_user")
             .withPassword("outbox_pass");
 
-    @Container
     static KafkaContainer kafka = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.6.1"));
+
+    static {
+        postgres.start();
+        kafka.start();
+    }
 
     @DynamicPropertySource
     static void configureProperties(DynamicPropertyRegistry registry) {
