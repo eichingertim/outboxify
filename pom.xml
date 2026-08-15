@@ -67,7 +67,7 @@
         <postgresql-driver.version>42.7.13</postgresql-driver.version>
         <ojdbc11.version>23.26.3.0.0</ojdbc11.version>
         <mysql-connector.version>26.7.0</mysql-connector.version>
-        <mssql-jdbc.version>13.5.1.jre11</mssql-jdbc.version>
+        <mssql-jdbc.version>12.8.1.jre11</mssql-jdbc.version>
         <awaitility.version>4.3.0</awaitility.version>
 
         <!-- Plugins -->
