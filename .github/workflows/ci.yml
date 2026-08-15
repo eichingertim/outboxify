@@ -109,4 +109,4 @@ jobs:
           cache: 'maven'
 
       - name: Run Maven Failsafe Integration Tests
-        run: mvn failsafe:integration-test failsafe:verify --batch-mode
+        run: mvn clean verify -Dsurefire.skip=true --batch-mode
