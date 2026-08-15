@@ -27,26 +27,32 @@ import io.outboxify.dialects.DialectRegistry;
 import io.outboxify.spring.lifecycle.OutboxifyLifecycleManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
+import javax.sql.DataSource;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class OutboxifyAutoConfigurationTest {
 
+    @Configuration
+    static class TestDataSourceConfig {
+        @Bean
+        public DataSource dataSource() {
+            org.h2.jdbcx.JdbcDataSource ds = new org.h2.jdbcx.JdbcDataSource();
+            ds.setURL("jdbc:h2:mem:autoconfigure_test;DB_CLOSE_DELAY=-1");
+            ds.setUser("sa");
+            ds.setPassword("");
+            return ds;
+        }
+    }
+
     private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
-            .withConfiguration(AutoConfigurations.of(
-                    DataSourceAutoConfiguration.class,
-                    OutboxifyAutoConfiguration.class
-            ))
-            .withPropertyValues(
-                    "spring.datasource.url=jdbc:h2:mem:autoconfigure_test;DB_CLOSE_DELAY=-1",
-                    "spring.datasource.driver-class-name=org.h2.Driver",
-                    "spring.datasource.username=sa",
-                    "spring.datasource.password="
-            );
+            .withUserConfiguration(TestDataSourceConfig.class)
+            .withConfiguration(AutoConfigurations.of(OutboxifyAutoConfiguration.class));
 
     @Test
     void testDefaultAutoConfigurationLoads() {

@@ -29,8 +29,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -93,8 +91,6 @@ class FastPathAndRollbackIntegrationTest {
 
     @SpringBootApplication
     @Import({
-            DataSourceAutoConfiguration.class,
-            DataSourceTransactionManagerAutoConfiguration.class,
             OutboxifyAutoConfiguration.class,
             OrderService.class,
             TestConfig.class

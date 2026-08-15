@@ -28,8 +28,7 @@ import jakarta.persistence.Table;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -193,9 +192,7 @@ class JpaEntityListenerIntegrationTest {
         }
     }
 
-    @Configuration
-    @EnableAutoConfiguration
-    @EntityScan(basePackageClasses = JpaEntityListenerIntegrationTest.class)
+    @SpringBootApplication
     @EnableJpaRepositories(basePackageClasses = JpaEntityListenerIntegrationTest.class, considerNestedRepositories = true)
     @Import(OrderDomainService.class)
     static class TestConfig {
