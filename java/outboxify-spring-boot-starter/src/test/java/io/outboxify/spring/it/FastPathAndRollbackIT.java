@@ -49,7 +49,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.awaitility.Awaitility.await;
 
-@SpringBootTest(classes = FastPathAndRollbackIntegrationTest.TestApp.class, properties = {
+@SpringBootTest(classes = FastPathAndRollbackIT.TestApp.class, properties = {
         "spring.datasource.url=jdbc:h2:mem:fastpath_test;DB_CLOSE_DELAY=-1;MODE=PostgreSQL",
         "spring.datasource.driver-class-name=org.h2.Driver",
         "spring.datasource.username=sa",
@@ -58,7 +58,7 @@ import static org.awaitility.Awaitility.await;
         "outboxify.pipelines.orders.dialect=H2",
         "outboxify.pipelines.orders.immediate-send.enabled=true"
 })
-class FastPathAndRollbackIntegrationTest {
+class FastPathAndRollbackIT {
 
     @Service
     public static class OrderService {

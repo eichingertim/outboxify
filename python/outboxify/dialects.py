@@ -69,8 +69,7 @@ class OracleDialect(DatabaseDialect):
             f"FROM {table_name} "
             f"WHERE {cols.status} IN ('NEW', 'FAILED') "
             f"AND {cols.retry_count} < {max_retries} "
-            f"ORDER BY {cols.created_at} ASC "
-            f"FETCH FIRST {batch_size} ROWS ONLY "
+            f"AND ROWNUM <= {batch_size} "
             f"FOR UPDATE SKIP LOCKED"
         )
 

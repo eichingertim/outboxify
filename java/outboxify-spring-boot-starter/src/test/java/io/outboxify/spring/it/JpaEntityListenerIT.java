@@ -19,6 +19,7 @@ package io.outboxify.spring.it;
 import io.outboxify.core.model.OutboxRecord;
 import io.outboxify.core.model.OutboxResult;
 import io.outboxify.core.spi.BrokerPublisher;
+import io.outboxify.spring.autoconfigure.OutboxifyAutoConfiguration;
 import io.outboxify.spring.jpa.OutboxEntityListener;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -30,9 +31,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -51,7 +50,7 @@ import java.util.concurrent.TimeUnit;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 
-@SpringBootTest(classes = JpaEntityListenerIntegrationTest.TestConfig.class, properties = {
+@SpringBootTest(classes = JpaEntityListenerIT.TestConfig.class, properties = {
         "spring.datasource.url=jdbc:h2:mem:jpa_entity_test;DB_CLOSE_DELAY=-1;MODE=PostgreSQL",
         "spring.datasource.driver-class-name=org.h2.Driver",
         "spring.datasource.username=sa",
@@ -72,7 +71,7 @@ import static org.awaitility.Awaitility.await;
         "outboxify.pipelines.orders.columns.updated-at=updated_at",
         "outboxify.pipelines.orders.columns.processed-at=processed_at"
 })
-class JpaEntityListenerIntegrationTest {
+class JpaEntityListenerIT {
 
     @Entity
     @Table(name = "ORDERS")
@@ -193,8 +192,8 @@ class JpaEntityListenerIntegrationTest {
     }
 
     @SpringBootApplication
-    @EnableJpaRepositories(basePackageClasses = JpaEntityListenerIntegrationTest.class, considerNestedRepositories = true)
-    @Import(OrderDomainService.class)
+    @EnableJpaRepositories(basePackageClasses = JpaEntityListenerIT.class, considerNestedRepositories = true)
+    @Import({OutboxifyAutoConfiguration.class, OrderDomainService.class})
     static class TestConfig {
         @Bean
         @Primary

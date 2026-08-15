@@ -43,7 +43,7 @@ def test_dialects_sql_generation():
     oracle = registry.get_dialect(DialectType.ORACLE)
     ora_query = oracle.build_select_batch_for_update_query("ORDERS", config.columns, 50, 3)
     assert "FOR UPDATE SKIP LOCKED" in ora_query
-    assert "FETCH FIRST 50 ROWS ONLY" in ora_query
+    assert "ROWNUM <= 50" in ora_query
     assert "SYSTIMESTAMP" in oracle.build_reap_stale_query("ORDERS", config.columns, 60, 3)
 
     # 2. PostgreSQL

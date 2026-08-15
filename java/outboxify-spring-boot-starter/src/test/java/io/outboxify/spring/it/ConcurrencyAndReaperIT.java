@@ -51,7 +51,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 
-class ConcurrencyAndReaperIntegrationTest {
+class ConcurrencyAndReaperIT {
 
     private JdbcDataSource dataSource;
     private DynamicSqlRepository repository;
@@ -105,7 +105,7 @@ class ConcurrencyAndReaperIntegrationTest {
 
     /**
      * Scenario 3: High Concurrency Polling Contention
-     * Seeds 1,000 outbox records and runs 4 concurrent poller workers.
+     * Seeds 500 outbox records and runs 4 concurrent poller workers.
      * Asserts all records processed to SENT with ZERO duplicate deliveries and zero deadlocks.
      */
     @Test

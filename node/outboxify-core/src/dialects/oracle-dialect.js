@@ -42,8 +42,7 @@ class OracleDialect extends DatabaseDialect {
       `FROM ${tableName} ` +
       `WHERE ${columns.status} IN ('NEW', 'FAILED') ` +
       `AND ${columns.retryCount} < ${Number(maxRetries)} ` +
-      `ORDER BY ${columns.createdAt} ASC ` +
-      `FETCH FIRST ${Number(batchSize)} ROWS ONLY ` +
+      `AND ROWNUM <= ${Number(batchSize)} ` +
       `FOR UPDATE SKIP LOCKED`;
   }
 

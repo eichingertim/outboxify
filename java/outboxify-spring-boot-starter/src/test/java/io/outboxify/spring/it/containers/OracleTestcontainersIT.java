@@ -39,7 +39,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Testcontainers(disabledWithoutDocker = true)
-class OracleTestcontainersIntegrationTest {
+class OracleTestcontainersIT {
 
     @Container
     static OracleContainer oracle = new OracleContainer("gvenzl/oracle-free:23-slim-faststart");
@@ -99,7 +99,7 @@ class OracleTestcontainersIntegrationTest {
         assertThat(id1).isEqualTo("ora-1");
         assertThat(id2).isEqualTo("ora-2");
 
-        // Fetch batch with SKIP LOCKED and FETCH FIRST n ROWS ONLY
+        // Fetch batch with SKIP LOCKED and ROWNUM <= batchSize
         List<OutboxRecord> batch = repository.fetchBatchForUpdate(config, 10);
         assertThat(batch).hasSize(2);
         assertThat(batch.get(0).getStatus()).isEqualTo(OutboxStatus.NEW);

@@ -53,7 +53,7 @@ test('Dialects generate correct database-specific locking and query syntax', () 
   const oracle = registry.getDialect(DialectType.ORACLE);
   const oracleQuery = oracle.buildSelectBatchForUpdateQuery('ORDERS', config.columns, 50, 3);
   assert.match(oracleQuery, /FOR UPDATE SKIP LOCKED/);
-  assert.match(oracleQuery, /FETCH FIRST 50 ROWS ONLY/);
+  assert.match(oracleQuery, /ROWNUM <= 50/);
   assert.match(oracle.buildReapStaleQuery('ORDERS', config.columns, 60, 3), /SYSTIMESTAMP/);
 
   // 2. PostgreSQL

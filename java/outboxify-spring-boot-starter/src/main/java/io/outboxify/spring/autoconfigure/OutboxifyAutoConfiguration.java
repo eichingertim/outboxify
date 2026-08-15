@@ -70,7 +70,6 @@ public class OutboxifyAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    @ConditionalOnBean(DataSource.class)
     public OutboxRepository openOutboxRepository(DataSource dataSource, DialectRegistry dialectRegistry) {
         return new DynamicSqlRepository(dataSource, new SpringConnectionProvider(dataSource), dialectRegistry);
     }
@@ -112,21 +111,18 @@ public class OutboxifyAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    @ConditionalOnBean({OutboxRepository.class, BrokerPublisher.class})
     public OutboxDispatcher openOutboxDispatcher(OutboxRepository openOutboxRepository, BrokerPublisher openOutboxBrokerPublisher) {
         return new OutboxDispatcher(openOutboxRepository, openOutboxBrokerPublisher);
     }
 
     @Bean
     @ConditionalOnMissingBean
-    @ConditionalOnBean(OutboxDispatcher.class)
     public OutboxHook openOutboxHook(OutboxDispatcher openOutboxDispatcher, Map<String, PipelineConfig> openOutboxPipelineConfigs) {
         return new TransactionalOutboxHook(openOutboxDispatcher, openOutboxPipelineConfigs::get);
     }
 
     @Bean
     @ConditionalOnMissingBean
-    @ConditionalOnBean({OutboxRepository.class, OutboxHook.class, OutboxDispatcher.class})
     public OutboxPublisher openOutboxPublisher(OutboxRepository openOutboxRepository,
                                               OutboxHook openOutboxHook,
                                               OutboxDispatcher openOutboxDispatcher,
@@ -136,7 +132,6 @@ public class OutboxifyAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    @ConditionalOnBean({OutboxRepository.class, OutboxDispatcher.class, BrokerPublisher.class, OutboxHook.class})
     public OutboxifyLifecycleManager openOutboxLifecycleManager(Map<String, PipelineConfig> openOutboxPipelineConfigs,
                                                                 OutboxRepository openOutboxRepository,
                                                                 OutboxDispatcher openOutboxDispatcher,

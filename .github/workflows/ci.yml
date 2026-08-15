@@ -90,3 +90,23 @@ jobs:
       - name: Run Pytest Async Test Suite
         working-directory: ./python
         run: pytest
+
+  # =========================================================================
+  # 4. Java Integration Tests (Spring Boot 4.x / Testcontainers + Docker)
+  # =========================================================================
+  java-integration-test:
+    name: Java Integration Tests (Testcontainers / JDK 21)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v7
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v5
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Run Maven Failsafe Integration Tests
+        run: mvn failsafe:integration-test failsafe:verify --batch-mode

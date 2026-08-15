@@ -41,7 +41,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.transaction.annotation.Transactional;
-import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -62,8 +61,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.awaitility.Awaitility.await;
 
 @Testcontainers(disabledWithoutDocker = true)
-@SpringBootTest(classes = PostgresKafkaTestcontainersIntegrationTest.TestApp.class)
-class PostgresKafkaTestcontainersIntegrationTest {
+@SpringBootTest(classes = PostgresKafkaTestcontainersIT.TestApp.class)
+class PostgresKafkaTestcontainersIT {
 
     @Container
     static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16-alpine")
@@ -112,10 +111,7 @@ class PostgresKafkaTestcontainersIntegrationTest {
     }
 
     @SpringBootApplication
-    @Import({
-            OutboxifyAutoConfiguration.class,
-            OrderService.class
-    })
+    @Import(OrderService.class)
     static class TestApp {
     }
 

@@ -47,8 +47,8 @@ class DialectsTest {
         assertThat(dialect.getStaleThresholdExpression(300)).contains("NUMTODSINTERVAL(300, 'SECOND')");
 
         String query = dialect.buildSelectBatchForUpdateQuery("ORDERS", columns, 200, 5);
-        assertThat(query).contains("FETCH FIRST 200 ROWS ONLY FOR UPDATE SKIP LOCKED")
-                .contains("ORDER BY CREATED_AT ASC")
+        assertThat(query).contains("AND ROWNUM <= 200")
+                .contains("FOR UPDATE SKIP LOCKED")
                 .contains("WHERE OUTBOX_STATUS IN ('NEW', 'FAILED')")
                 .contains("AND RETRY_COUNT < 5");
 

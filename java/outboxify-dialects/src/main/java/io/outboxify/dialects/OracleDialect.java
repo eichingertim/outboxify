@@ -63,8 +63,7 @@ public class OracleDialect implements DatabaseDialect {
                 " FROM " + tableName +
                 " WHERE " + columns.getStatus() + " IN ('NEW', 'FAILED')" +
                 " AND " + columns.getRetryCount() + " < " + maxRetries +
-                " ORDER BY " + columns.getCreatedAt() + " ASC" +
-                " FETCH FIRST " + batchSize + " ROWS ONLY" +
+                " AND ROWNUM <= " + batchSize +
                 " FOR UPDATE SKIP LOCKED";
     }
 
