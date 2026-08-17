@@ -120,6 +120,16 @@ async def create_order(dto: OrderDto):
 
 ---
 
+## Microservice Examples
+
+Ready-to-run microservice examples showcasing fast-path dual-write consistency, transaction rollback safety, and background poller recovery are available in the [`examples/`](file:///Users/timeichinger/coding-stuff/outboxify/examples) directory:
+
+- **[Java Spring Boot Order Service](file:///Users/timeichinger/coding-stuff/outboxify/examples/java/order-service)** (`examples/java/order-service`): Spring Boot 4.x + in-memory H2 + Outboxify starter. Run with `mvn spring-boot:run`.
+- **[Node.js Order Service](file:///Users/timeichinger/coding-stuff/outboxify/examples/node/order-service)** (`examples/node/order-service`): Express + `@outboxify/core`. Run with `npm start`.
+- **[Python FastAPI Order Service](file:///Users/timeichinger/coding-stuff/outboxify/examples/python/order-service)** (`examples/python/order-service`): FastAPI + SQLAlchemy + `outboxify`. Run with `uvicorn app.main:app`.
+
+---
+
 ## Verification & Testing
 
 Execute test suites across all three runtimes:
