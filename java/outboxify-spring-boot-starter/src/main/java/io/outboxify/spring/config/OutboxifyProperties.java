@@ -104,8 +104,8 @@ public class OutboxifyProperties {
         }
 
         // Broker config
-        if (props.getBroker() != null) {
-            BrokerConfigProps bp = props.getBroker();
+        BrokerConfigProps bp = props.getBroker() != null ? props.getBroker() : defaults.getBroker();
+        if (bp != null) {
             BrokerConfig.Builder brokerBuilder = BrokerConfig.builder();
             if (bp.getType() != null) brokerBuilder.type(bp.getType());
             if (bp.getProducer() != null) {
@@ -130,6 +130,7 @@ public class OutboxifyProperties {
         private long reaperIntervalMs = 10000L;
         private int maxRetries = 5;
         private int pollerThreads = 1;
+        private BrokerConfigProps broker = new BrokerConfigProps();
 
         public int getBatchSize() { return batchSize; }
         public void setBatchSize(int batchSize) { this.batchSize = batchSize; }
@@ -143,6 +144,8 @@ public class OutboxifyProperties {
         public void setMaxRetries(int maxRetries) { this.maxRetries = maxRetries; }
         public int getPollerThreads() { return pollerThreads; }
         public void setPollerThreads(int pollerThreads) { this.pollerThreads = pollerThreads; }
+        public BrokerConfigProps getBroker() { return broker; }
+        public void setBroker(BrokerConfigProps broker) { this.broker = broker; }
     }
 
     public static class PipelineConfigProps {
@@ -234,10 +237,13 @@ public class OutboxifyProperties {
 
     public static class BrokerConfigProps {
         private String type = "KAFKA";
+        private String kafkaTemplateRef;
         private ProducerProps producer = new ProducerProps();
 
         public String getType() { return type; }
         public void setType(String type) { this.type = type; }
+        public String getKafkaTemplateRef() { return kafkaTemplateRef; }
+        public void setKafkaTemplateRef(String kafkaTemplateRef) { this.kafkaTemplateRef = kafkaTemplateRef; }
         public ProducerProps getProducer() { return producer; }
         public void setProducer(ProducerProps producer) { this.producer = producer; }
     }

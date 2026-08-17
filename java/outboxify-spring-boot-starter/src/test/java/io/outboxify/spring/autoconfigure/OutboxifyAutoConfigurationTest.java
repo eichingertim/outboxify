@@ -19,20 +19,28 @@ package io.outboxify.spring.autoconfigure;
 import io.outboxify.core.engine.OutboxDispatcher;
 import io.outboxify.core.engine.OutboxHook;
 import io.outboxify.core.engine.OutboxPublisher;
+import io.outboxify.core.model.OutboxRecord;
+import io.outboxify.core.model.OutboxResult;
 import io.outboxify.core.model.PipelineConfig;
 import io.outboxify.core.spi.BrokerPublisher;
 import io.outboxify.core.spi.DialectType;
 import io.outboxify.core.spi.OutboxRepository;
 import io.outboxify.dialects.DialectRegistry;
+import io.outboxify.kafka.KafkaBrokerPublisher;
+import io.outboxify.spring.kafka.SpringKafkaBrokerPublisher;
 import io.outboxify.spring.lifecycle.OutboxifyLifecycleManager;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.kafka.core.KafkaTemplate;
 
 import javax.sql.DataSource;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -50,21 +58,118 @@ class OutboxifyAutoConfigurationTest {
         }
     }
 
+    @Configuration
+    static class TestKafkaTemplateConfig {
+        @Bean
+        @SuppressWarnings("unchecked")
+        public KafkaTemplate<String, String> kafkaTemplate() {
+            return Mockito.mock(KafkaTemplate.class);
+        }
+    }
+
+    @Configuration
+    static class TestMultiKafkaTemplateConfig {
+        @Bean
+        @SuppressWarnings("unchecked")
+        public KafkaTemplate<String, String> kafkaTemplate() {
+            return Mockito.mock(KafkaTemplate.class);
+        }
+
+        @Bean("ordersKafkaTemplate")
+        @SuppressWarnings("unchecked")
+        public KafkaTemplate<String, String> ordersKafkaTemplate() {
+            return Mockito.mock(KafkaTemplate.class);
+        }
+    }
+
+    @Configuration
+    static class TestCustomBrokerPublisherConfig {
+        @Bean
+        public BrokerPublisher customBrokerPublisher() {
+            return new BrokerPublisher() {
+                @Override
+                public CompletableFuture<OutboxResult> publish(String pipeline, OutboxRecord record) {
+                    return CompletableFuture.completedFuture(OutboxResult.success(record.getOutboxId(), record.getTopic(), 0, 0L));
+                }
+
+                @Override
+                public CompletableFuture<List<OutboxResult>> publishBatch(String pipeline, List<OutboxRecord> records) {
+                    return CompletableFuture.completedFuture(List.of());
+                }
+
+                @Override
+                public void close() {}
+            };
+        }
+    }
+
     private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
             .withUserConfiguration(TestDataSourceConfig.class)
             .withConfiguration(AutoConfigurations.of(OutboxifyAutoConfiguration.class));
 
     @Test
-    void testDefaultAutoConfigurationLoads() {
+    void testDefaultAutoConfigurationLoadsWithFallbackPublisher() {
         contextRunner.run(context -> {
             assertThat(context).hasSingleBean(DialectRegistry.class);
             assertThat(context).hasSingleBean(OutboxRepository.class);
             assertThat(context).hasSingleBean(BrokerPublisher.class);
+            assertThat(context.getBean(BrokerPublisher.class)).isInstanceOf(KafkaBrokerPublisher.class);
             assertThat(context).hasSingleBean(OutboxDispatcher.class);
             assertThat(context).hasSingleBean(OutboxHook.class);
             assertThat(context).hasSingleBean(OutboxPublisher.class);
             assertThat(context).hasSingleBean(OutboxifyLifecycleManager.class);
         });
+    }
+
+    @Test
+    void testAutoConfigurationWithInjectedKafkaTemplate() {
+        contextRunner
+                .withUserConfiguration(TestKafkaTemplateConfig.class)
+                .run(context -> {
+                    assertThat(context).hasSingleBean(BrokerPublisher.class);
+                    BrokerPublisher publisher = context.getBean(BrokerPublisher.class);
+                    assertThat(publisher).isInstanceOf(SpringKafkaBrokerPublisher.class);
+
+                    SpringKafkaBrokerPublisher springKafkaPublisher = (SpringKafkaBrokerPublisher) publisher;
+                    KafkaTemplate<?, ?> template = springKafkaPublisher.getTemplate("default");
+                    assertThat(template).isNotNull();
+                    assertThat(template).isSameAs(context.getBean("kafkaTemplate"));
+                });
+    }
+
+    @Test
+    void testAutoConfigurationWithNamedPipelineKafkaTemplates() {
+        contextRunner
+                .withUserConfiguration(TestMultiKafkaTemplateConfig.class)
+                .withPropertyValues(
+                        "outboxify.pipelines.orders.table-name=ORDERS",
+                        "outboxify.pipelines.orders.broker.kafka-template-ref=ordersKafkaTemplate",
+                        "outboxify.pipelines.payments.table-name=PAYMENTS"
+                )
+                .run(context -> {
+                    assertThat(context).hasSingleBean(BrokerPublisher.class);
+                    BrokerPublisher publisher = context.getBean(BrokerPublisher.class);
+                    assertThat(publisher).isInstanceOf(SpringKafkaBrokerPublisher.class);
+
+                    SpringKafkaBrokerPublisher springKafkaPublisher = (SpringKafkaBrokerPublisher) publisher;
+                    assertThat(springKafkaPublisher.getTemplate("orders"))
+                            .isSameAs(context.getBean("ordersKafkaTemplate"));
+                    assertThat(springKafkaPublisher.getTemplate("payments"))
+                            .isSameAs(context.getBean("kafkaTemplate"));
+                });
+    }
+
+    @Test
+    void testCustomBrokerPublisherTakesPrecedenceOverKafkaTemplate() {
+        contextRunner
+                .withUserConfiguration(TestKafkaTemplateConfig.class, TestCustomBrokerPublisherConfig.class)
+                .run(context -> {
+                    assertThat(context).hasSingleBean(BrokerPublisher.class);
+                    BrokerPublisher publisher = context.getBean(BrokerPublisher.class);
+                    assertThat(publisher).isNotInstanceOf(SpringKafkaBrokerPublisher.class);
+                    assertThat(publisher).isNotInstanceOf(KafkaBrokerPublisher.class);
+                    assertThat(publisher).isSameAs(context.getBean("customBrokerPublisher"));
+                });
     }
 
     @Test

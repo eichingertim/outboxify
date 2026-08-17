@@ -1,0 +1,49 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: spring-kafka-outbox-example
+  datasource:
+    url: jdbc:h2:mem:payments_db;DB_CLOSE_DELAY=-1;MODE=PostgreSQL
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+  sql:
+    init:
+      mode: always
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      acks: all
+      retries: 3
+
+outboxify:
+  pipelines:
+    # 1. Standard pipeline automatically picks up the primary Spring KafkaTemplate
+    payments:
+      table-name: PAYMENTS_OUTBOX
+      dialect: H2
+      batch-size: 50
+      poll-interval-ms: 1000
+      processing-timeout-seconds: 30
+      max-retries: 3
+      immediate-send:
+        enabled: true
+
+    # 2. VIP pipeline routes through a dedicated named KafkaTemplate bean
+    high_priority_payments:
+      table-name: HIGH_PRIORITY_OUTBOX
+      dialect: H2
+      batch-size: 20
+      poll-interval-ms: 500
+      processing-timeout-seconds: 15
+      max-retries: 5
+      immediate-send:
+        enabled: true
+      broker:
+        kafka-template-ref: highPriorityKafkaTemplate

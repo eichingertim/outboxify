@@ -67,6 +67,12 @@ public class KafkaBrokerPublisher implements BrokerPublisher {
         }
     }
 
+    public void registerPipelineProducer(String pipeline, Producer<String, String> producer) {
+        if (pipeline != null && producer != null) {
+            pipelineProducers.put(pipeline, producer);
+        }
+    }
+
     public static Producer<String, String> createProducer(BrokerConfig config) {
         Properties props = new Properties();
 

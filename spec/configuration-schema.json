@@ -157,6 +157,10 @@
           "enum": ["KAFKA", "CUSTOM"],
           "default": "KAFKA"
         },
+        "kafkaTemplateRef": {
+          "type": "string",
+          "description": "Optional Spring KafkaTemplate bean name reference to route dispatches through"
+        },
         "producer": {
           "type": "object",
           "properties": {
