@@ -67,9 +67,11 @@ class PostgresKafkaTestcontainersIT {
     static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16-alpine")
             .withDatabaseName("outbox_db")
             .withUsername("outbox_user")
-            .withPassword("outbox_pass");
+            .withPassword("outbox_pass")
+            .withStartupTimeout(Duration.ofMinutes(3));
 
-    static KafkaContainer kafka = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.6.1"));
+    static KafkaContainer kafka = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.6.1"))
+            .withStartupTimeout(Duration.ofMinutes(3));
 
     static {
         postgres.start();

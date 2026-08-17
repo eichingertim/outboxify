@@ -33,6 +33,7 @@ import org.testcontainers.oracle.OracleContainer;
 
 import java.sql.Connection;
 import java.sql.Statement;
+import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,7 +42,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Testcontainers(disabledWithoutDocker = true)
 class OracleTestcontainersIT {
 
-    static OracleContainer oracle = new OracleContainer("gvenzl/oracle-free:23-slim-faststart");
+    static OracleContainer oracle = new OracleContainer("gvenzl/oracle-free:23-slim-faststart")
+            .withStartupTimeout(Duration.ofMinutes(5));
 
     static {
         oracle.start();
