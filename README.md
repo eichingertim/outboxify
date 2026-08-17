@@ -78,28 +78,24 @@ sequenceDiagram
     participant Broker as Apache Kafka
     participant Poller as Background Poller / Reaper
 
-    Client->>App: Business Operation (e.g., Create Order)
-    activate App
-    App->>DB: BEGIN Transaction
-    App->>DB: INSERT / UPDATE Business Entity
-    App->>DB: INSERT Outbox Record (Status: PENDING)
-    App->>DB: COMMIT Transaction
-    deactivate DB
+    Client->>+App: Business Operation (e.g., Create Order)
+    App->>+DB: BEGIN Transaction & INSERT Records
+    DB-->>-App: COMMIT Transaction Success
     
     alt Fast-Path (Sub-Millisecond Dispatch)
-        DB-->>Hook: Transaction Committed Event
-        Hook->>Broker: Async Send (Record Metadata)
-        Broker-->>Hook: ACK (Partition, Offset)
+        App->>+Hook: After-Commit Trigger
+        Hook->>+Broker: Async Send (Record Metadata)
+        Broker-->>-Hook: ACK (Partition, Offset)
         Hook->>DB: UPDATE Outbox Record (Status: PROCESSED)
+        Hook-->>-App: Completed
     else Fallback Slow-Path (Failure / Crash Recovery)
-        Poller->>DB: SELECT PENDING / FAILED FOR UPDATE SKIP LOCKED
-        Poller->>DB: UPDATE Status -> PROCESSING
-        Poller->>Broker: Batch Publish
-        Broker-->>Poller: Batch ACK
-        Poller->>DB: UPDATE Status -> PROCESSED
+        Poller->>+DB: SELECT FOR UPDATE SKIP LOCKED
+        DB-->>Poller: Return Staged Records
+        Poller->>+Broker: Batch Publish
+        Broker-->>-Poller: Batch ACK
+        Poller->>-DB: UPDATE Status -> PROCESSED
     end
-    App-->>Client: Success Response
-    deactivate App
+    App-->>-Client: Success Response
 ```
 
 ---
