@@ -4,14 +4,14 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "outboxify"
-version = "2.0.0"
+version = "0.1.0"
 description = "Polyglot High-Throughput Transactional Outbox Starter for Python"
 readme = "README.md"
 requires-python = ">=3.11"
 authors = [{ name = "Outboxify Authors" }]
 license = { text = "Apache-2.0" }
 classifiers = [
-    "Development Status :: 5 - Production/Stable",
+    "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: Apache Software License",
     "Operating System :: OS Independent",
@@ -34,10 +34,8 @@ kafka = ["aiokafka>=0.11.0"]
 test = ["pytest>=8.3.0", "pytest-asyncio>=0.24.0"]
 
 [project.urls]
-Homepage = "https://outboxify.io"
-Documentation = "https://docs.outboxify.io"
-Repository = "https://github.com/outboxify/outboxify"
-Issues = "https://github.com/outboxify/outboxify/issues"
+Repository = "https://github.com/eichingertim/outboxify"
+Issues = "https://github.com/eichingertim/outboxify/issues"
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"

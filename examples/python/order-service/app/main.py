@@ -113,7 +113,7 @@ lifespan = create_outboxify_lifespan(app_manager)
 app = FastAPI(
     title="Outboxify Python Order Service",
     description="Microservice demonstrating Dual-Write Transactional Outbox Pattern with Outboxify",
-    version="2.0.0",
+    version="0.1.0",
     lifespan=lifespan,
 )
 

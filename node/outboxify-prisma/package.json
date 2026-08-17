@@ -1,6 +1,6 @@
 {
   "name": "@outboxify/prisma",
-  "version": "2.0.0",
+  "version": "0.1.0",
   "description": "Prisma client extension and transactional outbox middleware for Outboxify",
   "main": "src/index.js",
   "types": "src/index.d.ts",
@@ -19,7 +19,7 @@
     "test": "node --test test/prisma.test.js"
   },
   "dependencies": {
-    "@outboxify/core": "^2.0.0"
+    "@outboxify/core": "^0.1.0"
   },
   "peerDependencies": {
     "@prisma/client": ">=5.0.0 || >=6.0.0 || >=7.0.0"

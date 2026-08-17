@@ -1,6 +1,6 @@
 {
   "name": "order-service-example-node",
-  "version": "2.0.0",
+  "version": "0.1.0",
   "description": "Example Node.js microservice demonstrating Outboxify transactional outbox pattern",
   "main": "src/server.js",
   "scripts": {

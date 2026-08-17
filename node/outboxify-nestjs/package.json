@@ -1,6 +1,6 @@
 {
   "name": "@outboxify/nestjs",
-  "version": "2.0.0",
+  "version": "0.1.0",
   "description": "NestJS Dynamic Module and Lifecycle Management for Outboxify",
   "main": "src/index.js",
   "types": "src/index.d.ts",
@@ -19,7 +19,7 @@
     "test": "node --test test/nestjs.test.js"
   },
   "dependencies": {
-    "@outboxify/core": "^2.0.0"
+    "@outboxify/core": "^0.1.0"
   },
   "peerDependencies": {
     "@nestjs/common": ">=10.0.0 <12.0.0",

@@ -40,7 +40,8 @@ htmlcov/
 dist/
 build/
 
-# IDE & OS
+# IDE, OS & Local Tooling
+.agents/
 .idea/
 *.iml
 .vscode/

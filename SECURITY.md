@@ -10,8 +10,7 @@ We provide security updates and patches for the following major versions:
 
 | Version | Supported          | Security Patches |
 | :------ | :----------------- | :--------------- |
-| 2.x.x   | :white_check_mark: | Active           |
-| 1.x.x   | :x:                | End of Life      |
+| 0.1.x   | :white_check_mark: | Active           |
 
 ---
 

@@ -3,7 +3,13 @@ name: Release & Packaging Pipeline
 on:
   push:
     tags:
-      - 'v*.*.*'
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        description: 'Tag name (e.g. v0.1.0)'
+        required: false
+        default: ''
 
 permissions:
   contents: write
@@ -11,7 +17,7 @@ permissions:
 
 jobs:
   build-and-release:
-    name: Build Artifacts and Create GitHub Release
+    name: Build Artifacts and Publish GitHub Release
     runs-on: ubuntu-latest
 
     steps:
@@ -20,6 +26,7 @@ jobs:
         with:
           fetch-depth: 0
 
+      # 1. Java Build & Packaging
       - name: Set up JDK 21
         uses: actions/setup-java@v5
         with:
@@ -27,33 +34,45 @@ jobs:
           distribution: 'temurin'
           cache: 'maven'
 
-      - name: Build Java JARs
+      - name: Build Java JARs & Sources
         run: mvn clean package -DskipTests --batch-mode
 
+      # 2. Node.js Build & Packaging
       - name: Set up Node.js 22
         uses: actions/setup-node@v7
         with:
           node-version: '22'
 
-      - name: Build Node Packages
+      - name: Build and Pack Node Packages
         working-directory: ./node
-        run: npm run build --if-present
+        run: |
+          mkdir -p ../dist/node
+          npm run build --workspaces --if-present
+          for dir in outboxify-core outboxify-typeorm outboxify-prisma outboxify-nestjs; do
+            (cd "$dir" && npm pack --pack-destination ../../dist/node)
+          done
 
+      # 3. Python Build & Packaging
       - name: Set up Python 3.12
         uses: actions/setup-python@v7
         with:
           python-version: '3.12'
 
-      - name: Build Python Wheel & Tarball
+      - name: Build Python Wheel & Source Distribution
         working-directory: ./python
         run: |
           python -m pip install --upgrade pip build
-          python -m build
+          python -m build --outdir ../dist/python
 
-      - name: Generate Release Notes & Create GitHub Release
+      # 4. Create GitHub Release
+      - name: Create GitHub Release with Artifacts
         uses: softprops/action-gh-release@v3
         with:
+          tag_name: ${{ github.event.inputs.tag_name || github.ref_name }}
           generate_release_notes: true
+          draft: false
+          prerelease: false
           files: |
             java/*/target/*.jar
-            python/dist/*
+            dist/node/*.tgz
+            dist/python/*

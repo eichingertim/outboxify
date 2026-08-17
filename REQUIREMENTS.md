@@ -1,5 +1,5 @@
 # Open-Source Specification & Architecture: Outboxify (Universal Transactional Outbox)
-**Document Version:** 2.0.0  
+**Document Version:** 0.1.0  
 **License:** Apache-2.0  
 **Project Ecosystem:** Polyglot Transactional Outbox Engine (Java, TypeScript, Python)  
 **Supported Databases:** Oracle (12c+), PostgreSQL (9.5+), MySQL (8.0+), Microsoft SQL Server (2019+)  

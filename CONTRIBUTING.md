@@ -90,7 +90,8 @@ We use [Conventional Commits](https://www.conventionalcommits.org/) for automate
 2. **Implement and Test**: Add unit and integration tests covering positive and negative cases.
 3. **Commit**: Follow Conventional Commits formatting.
 4. **Submit PR**: Complete the [Pull Request Template](.github/PULL_REQUEST_TEMPLATE.md) with details on tested databases/brokers.
-5. **Review**: Ensure CI passes all quality gates (Java, Node, Python, CodeQL).
+5. **Review**: Ensure CI passes all quality gates (Java, Node, Python).
+6. **Releases**: Maintainers follow the release process documented in [RELEASING.md](RELEASING.md).
 
 ---
 

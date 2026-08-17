@@ -1,6 +1,6 @@
 {
   "name": "@outboxify/core",
-  "version": "2.0.0",
+  "version": "0.1.0",
   "description": "Core runtime, dialect registry, state machine, and schedulers for Outboxify Node.js",
   "main": "src/index.js",
   "types": "src/index.d.ts",
