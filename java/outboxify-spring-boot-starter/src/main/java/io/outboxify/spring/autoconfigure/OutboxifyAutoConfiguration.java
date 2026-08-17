@@ -50,11 +50,7 @@ import java.util.Map;
  * Spring Boot AutoConfiguration for Outboxify.
  * Dynamically wires multi-pipeline schedulers, repositories, Kafka publishers, and transaction hooks.
  */
-@AutoConfiguration(afterName = {
-        "org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration",
-        "org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration",
-        "org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration"
-})
+@AutoConfiguration
 @ConditionalOnClass({OutboxPublisher.class, DataSource.class})
 @ConditionalOnProperty(prefix = "outboxify", name = "enabled", havingValue = "true", matchIfMissing = true)
 @EnableConfigurationProperties(OutboxifyProperties.class)
