@@ -51,7 +51,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <!-- Core Dependencies (2026 Latest Production Releases & Zero-CVE Baselines) -->
-        <spring-boot.version>4.1.0</spring-boot.version>
+        <spring-boot.version>4.1.1</spring-boot.version>
         <kafka-clients.version>4.3.1</kafka-clients.version>
         <slf4j.version>2.0.18</slf4j.version>
         <jackson.version>2.22.1</jackson.version>
