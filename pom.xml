@@ -63,7 +63,7 @@
         <assertj.version>3.27.7</assertj.version>
         <mockito.version>5.23.0</mockito.version>
         <testcontainers.version>1.20.6</testcontainers.version>
-        <h2.version>2.4.240</h2.version>
+        <h2.version>2.5.252</h2.version>
         <postgresql-driver.version>42.7.13</postgresql-driver.version>
         <ojdbc11.version>23.26.3.0.0</ojdbc11.version>
         <mysql-connector.version>26.7.0</mysql-connector.version>
