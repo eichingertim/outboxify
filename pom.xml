@@ -64,7 +64,7 @@
         <mockito.version>5.23.0</mockito.version>
         <testcontainers.version>1.20.6</testcontainers.version>
         <h2.version>2.4.240</h2.version>
-        <postgresql-driver.version>42.7.13</postgresql-driver.version>
+        <postgresql-driver.version>42.7.14</postgresql-driver.version>
         <ojdbc11.version>23.26.3.0.0</ojdbc11.version>
         <mysql-connector.version>26.7.0</mysql-connector.version>
         <mssql-jdbc.version>13.4.0.jre11</mssql-jdbc.version>
